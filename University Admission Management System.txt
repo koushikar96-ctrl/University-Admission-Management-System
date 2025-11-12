@@ -1,0 +1,2598 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import javax.swing.JButton;
+
+public class HomePage extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
+    private static final String DB_USER = "root";  // Change this to your MySQL username
+    private static final String DB_PASSWORD = "SWETHA*1s";  // Change this to your MySQL password
+
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					HomePage frame = new HomePage();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public HomePage() {
+		
+		setBounds(100, 100, 900, 542);
+		contentPane = new JPanel();
+		
+		setResizable(false);
+		
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.controlShadow);
+		panel.setBounds(0, 0, 886, 107);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("UNIVERSITY ADMISSION MANAGEMENT SYSTEM");
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 24));
+		lblNewLabel.setBounds(144, 20, 580, 50);
+		panel.add(lblNewLabel);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(SystemColor.scrollbar);
+		panel_1.setBounds(0, 117, 886, 320);
+		contentPane.add(panel_1);
+		
+		JButton btnNewButton = new JButton("Add Student");
+		btnNewButton.setBounds(39, 46, 159, 66);
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				frame f = new frame();
+				f.setVisible(true);
+				
+			}
+		});
+		panel_1.setLayout(null);
+		
+		panel_1.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Update Student");
+		btnNewButton_1.setBounds(238, 133, 166, 66);
+		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		
+btnNewButton_1.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent ae)
+			{
+				dispose();
+				UpdateStudent us=new UpdateStudent();
+				us.setVisible(true);
+			}
+		});
+
+		panel_1.add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("Remove Student");
+		btnNewButton_2.setBounds(447, 46, 159, 66);
+		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				
+				dispose();
+				 DeleteStudents f =new DeleteStudents();
+				
+				 f.setVisible(true);
+			}
+			
+		});
+		
+		
+		
+		panel_1.add(btnNewButton_2);
+		
+		JButton btnNewButton_3 = new JButton("Display All Student");
+		btnNewButton_3.setBounds(657, 128, 187, 66);
+		btnNewButton_3.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{	dispose();
+				DisplayStudent l=new DisplayStudent();
+				l.setVisible(true);
+			}
+		});
+		
+		panel_1.add(btnNewButton_3);
+		
+		JButton btnNewButton_4 = new JButton("View A Student");
+		btnNewButton_4.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		btnNewButton_4.setBounds(447, 228, 159, 66);
+		panel_1.add(btnNewButton_4);
+		btnNewButton_4.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				dispose();
+				DisplayParticularStudentDetails display=new DisplayParticularStudentDetails();
+				display.setVisible(true);
+			}
+			
+		});
+		
+	//1
+		
+		
+		JButton btnNewButton_5 = new JButton("View Seat Availability");
+		btnNewButton_5.setBounds(35, 228, 199, 66);
+		btnNewButton_5.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		btnNewButton_5.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        displaySeatAvailability();  // Method to display seat availability
+		    }
+		});
+		panel_1.add(btnNewButton_5);
+		
+		//====================================
+		
+		
+		
+	}
+		
+	
+	//2
+	
+	
+	public void displaySeatAvailability() {
+		    String query = "SELECT * FROM seat_availability";
+
+		    try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+		         Statement stmt = conn.createStatement();
+		         ResultSet rs = stmt.executeQuery(query)) {
+		        
+		        // Create a frame to display seat availability
+		        JFrame seatFrame = new JFrame("Seat Availability");
+		        seatFrame.setSize(400, 300);
+		        seatFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		        seatFrame.setLocationRelativeTo(null); // Center the window
+		        
+		        // Define column names
+		        String[] columns = {"Department", "Total Seats", "Available Seats"};
+		        //DefaultTableModel model = new DefaultTableModel(columns, 0);
+		        
+		        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+	                @Override
+	                public boolean isCellEditable(int row, int column) {
+	                    return false; // Make all cells non-editable
+	                }
+	            };
+		        
+		        // Loop through the ResultSet and add each row of seat data to the model
+		        while (rs.next()) {
+		            Object[] row = {
+		                rs.getString("department"),
+		                rs.getInt("total_seats"),
+		                rs.getInt("available_seats")
+		            };
+		            model.addRow(row);
+		        }
+		        
+		        // Create a JTable and wrap it in a JScrollPane
+		        JTable table = new JTable(model);
+		        JScrollPane scrollPane = new JScrollPane(table);
+		        
+		        // Add the JScrollPane containing the table to the frame
+		        seatFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		        
+		        // Make the frame visible
+		        seatFrame.setVisible(true);
+		        
+		    } catch (SQLException e) {
+		        JOptionPane.showMessageDialog(null, "Error fetching seat availability: " + e.getMessage());
+		    }
+
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+}
+
+
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JEditorPane;
+import javax.swing.JFormattedTextField;
+
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.SystemColor;
+
+public class frame extends JFrame implements ActionListener {
+
+	private static final long serialVersionUID = 1L;
+	private Map<String, Integer> departmentCounters= new HashMap<>();
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
+    private static final String DB_USER = "root";  // Change this to your MySQL username
+    private static final String DB_PASSWORD = "SWETHA*1s";  // Change this to your MySQL password
+
+	public JPanel contentPane;
+	public  JLabel lblNewLabel_1;
+	public JTextField textField;
+	public  JTextField textField_1;
+	public  JTextField textField_2;
+	public  JTextField textField_3;
+	public  JTextField textField_4;
+	public  JLabel lblNewLabel_5;
+	public JLabel lblNewLabel_6;
+	public JTextField textField_6;
+	public JTextField textField_7;
+	public JLabel lblNewLabel_7;
+	public JLabel lblNewLabel_8;
+	public JLabel lblNewLabel_9;
+	public JLabel lblNewLabel_10;
+	public JLabel lblNewLabel_11;
+	public JLabel lblAadhar;
+	public JTextField textField_8;
+	public  JTextField textField_9;
+	public  JTextField textField_10;
+	public  JTextField textField_11;
+	public JTextField textField_12;
+	public  JTextField textField_13;
+	public JTextField textField_14;
+	public  JTextField textField_15;
+	public  JTextField textField_5;
+	public JComboBox comboBox_1;
+	public  JComboBox comboBox_2;
+	private JLabel lblNewLabel_17;
+	private JLabel lblNewLabel_18;
+	private JTextField textField_16;
+	private Map<String, Integer> name;
+	private Map<String, Integer> department;
+	private JButton btnNewButton_1;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					frame frame = new frame();
+					frame.setVisible(true);
+					//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+					
+
+				    } 
+				
+				    catch (Exception e) {
+				    	e.printStackTrace();
+				    }
+			    }
+		    });
+	  }
+
+
+	/**
+	 * Create the frame.
+	 */
+	public frame() {
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(0,0,1202,990);
+		//setBounds(0, 0, 1202, 1009);
+		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.scrollbar);
+		contentPane.setBorder(new EmptyBorder(0,0, 5,5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		lblNewLabel_1 = new JLabel(" Name");
+		lblNewLabel_1.setBounds(56, 97, 73, 13);
+		lblNewLabel_1.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblAge = new JLabel("Age");
+		lblAge.setBounds(56, 155, 73, 19);
+		lblAge.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblAge);
+		//setLayout(new FlowLayut());
+		JLabel lblNewLabel = new JLabel("D.O.B");
+		lblNewLabel.setBounds(56, 220, 73, 13);
+		lblNewLabel.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_2 = new JLabel("Father Name");
+		lblNewLabel_2.setBounds(56, 285, 94, 13);
+		lblNewLabel_2.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_2);
+		
+		textField = new JTextField();
+		textField.setBounds(187, 94, 291, 19);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		//=======
+		
+		
+		//========
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(187, 155, 291, 19);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(187, 217, 291, 19);
+		contentPane.add(textField_2);
+		textField_2.setColumns(10);
+		
+		textField_3 = new JTextField();
+		textField_3.setBounds(187, 282, 291, 19);
+		contentPane.add(textField_3);
+		textField_3.setColumns(10);
+		
+		JLabel lblNewLabel_3 = new JLabel("Mother Name");
+		lblNewLabel_3.setBounds(56, 359, 111, 13);
+		lblNewLabel_3.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_3);
+		
+		textField_4 = new JTextField();
+		textField_4.setBounds(187, 356, 291, 19);
+		contentPane.add(textField_4);
+		textField_4.setColumns(10);
+		
+		JLabel lblNewLabel_4 = new JLabel("Gender");
+		lblNewLabel_4.setBounds(527, 97, 102, 13);
+		lblNewLabel_4.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_5 = new JLabel("Father Occupation");
+		lblNewLabel_5.setBounds(45, 416, 132, 28);
+		lblNewLabel_5.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_6 = new JLabel("Mother Occupation");
+		lblNewLabel_6.setBounds(45, 496, 132, 28);
+		lblNewLabel_6.setFont(new Font("Sitka Text", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_6);
+		
+		textField_6 = new JTextField();
+		textField_6.setBounds(187, 423, 291, 19);
+		contentPane.add(textField_6);
+		textField_6.setColumns(10);
+		
+		textField_7 = new JTextField();
+		textField_7.setBounds(187, 499, 291, 19);
+		contentPane.add(textField_7);
+		textField_7.setColumns(10);
+		
+		JLabel lblNewLabel_7 = new JLabel("Blood Group");
+		lblNewLabel_7.setBounds(56, 575, 121, 18);
+		lblNewLabel_7.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_7);
+		
+		JLabel lblNewLabel_8 = new JLabel("City of Residence");
+		lblNewLabel_8.setBounds(56, 643, 121, 18);
+		lblNewLabel_8.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_8);
+		
+		JLabel lblNewLabel_9 = new JLabel("Address");
+		lblNewLabel_9.setBounds(527, 160, 111, 13);
+		lblNewLabel_9.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_9);
+		
+	    JLabel lblNewLabel_10 = new JLabel("Contact");
+	    lblNewLabel_10.setBounds(527, 222, 87, 13);
+		lblNewLabel_10.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_10);
+		
+		JLabel lblNewLabel_11 = new JLabel("Email");
+		lblNewLabel_11.setBounds(527, 287, 69, 13);
+		lblNewLabel_11.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_11);
+		
+		JLabel lblAadhar = new JLabel("Aadhar");
+		lblAadhar.setBounds(527, 361, 87, 13);
+		lblAadhar.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblAadhar);
+		
+		textField_8 = new JTextField();
+		textField_8.setBounds(648, 219, 264, 19);
+		contentPane.add(textField_8);
+		textField_8.setColumns(10);
+		
+		textField_9 = new JTextField();
+		textField_9.setBounds(648, 284, 430, 19);
+		contentPane.add(textField_9);
+		textField_9.setColumns(10);
+		
+
+
+		
+		textField_10 = new JTextField();
+		textField_10.setBounds(648, 358, 264, 19);
+		contentPane.add(textField_10);
+		textField_10.setColumns(10);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(648, 95, 140, 21);
+	//	contentPane.add();
+		//contentPane.add("Female");
+		
+		
+		textField_11 = new JTextField();
+		textField_11.setBounds(187, 574, 291, 19);
+		contentPane.add(textField_11);
+		textField_11.setColumns(10);
+		
+		textField_12 = new JTextField();
+		textField_12.setBounds(187, 642, 291, 19);
+		contentPane.add(textField_12);
+		textField_12.setColumns(10);
+		
+		JLabel lblNewLabel_12 = new JLabel("Religion");
+		lblNewLabel_12.setBounds(531, 416, 83, 28);
+		lblNewLabel_12.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_12);
+		
+		JLabel lblNewLabel_13 = new JLabel("Caste");
+		lblNewLabel_13.setBounds(527, 499, 111, 13);
+		lblNewLabel_13.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_13);
+		
+		JLabel lblNewLabel_14 = new JLabel("Community");
+		lblNewLabel_14.setBounds(527, 570, 111, 28);
+		lblNewLabel_14.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_14);
+		
+		textField_13 = new JTextField();
+		textField_13.setBounds(648, 425, 264, 19);
+		contentPane.add(textField_13);
+		textField_13.setColumns(10);
+		
+		textField_14 = new JTextField();
+		textField_14.setBounds(648, 501, 264, 19);
+		contentPane.add(textField_14);
+		textField_14.setColumns(10);
+		
+		textField_15 = new JTextField();
+		textField_15.setBounds(648, 574, 264, 19);
+		contentPane.add(textField_15);
+		textField_15.setColumns(10);
+		
+		JLabel lblNewLabel_15 = new JLabel("Nationality");
+		lblNewLabel_15.setBounds(535, 638, 94, 28);
+		lblNewLabel_15.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_15);
+		
+		textField_5 = new JTextField();
+		textField_5.setBounds(648, 138, 430, 52);
+		contentPane.add(textField_5);
+		textField_5.setColumns(10);
+		comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(648, 641, 264, 21);
+		comboBox_1.setFont(new Font("Times New Roman", Font.ITALIC, 15));
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Indian", "Foreigner"}));
+		contentPane.add(comboBox_1);
+		
+		comboBox_2 = new JComboBox();
+		comboBox_2.setBounds(648, 95, 236, 21);
+		comboBox_2.setFont(new Font("Times New Roman", Font.ITALIC, 15));
+		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Male", "Female"}));
+		contentPane.add(comboBox_2);
+		
+		JLabel lblNewLabel_16 = new JLabel("STUDENT PERSONAL DETAILS");
+		lblNewLabel_16.setBounds(405, 10, 264, 38);
+		lblNewLabel_16.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_16);
+		
+		
+		
+		JButton btnNewButton1 = new JButton("NEXT");
+		btnNewButton1.setBounds(840, 759, 121, 28);
+		btnNewButton1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(btnNewButton1);
+		//.btnNewButton1..addActionListener(new ActionListener() {
+			btnNewButton1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+			
+			if(textField.getText().isEmpty() || textField_2 .getText().isEmpty() || textField_3.getText().isEmpty() ||textField_4.getText().isEmpty() ||textField_6.getText().isEmpty() ||textField_4.getText().isEmpty() ||textField_11.getText().isEmpty() ||textField_12.getText().isEmpty() ||textField_5.getText().isEmpty() ||textField_8.getText().isEmpty() ||textField_9.getText().isEmpty() ||textField_10.getText().isEmpty() ||textField_13.getText().isEmpty() || textField_14.getText().isEmpty() || textField_15.getText().isEmpty() ||textField_16.getText().toUpperCase().isEmpty())
+				
+			{
+				JOptionPane.showMessageDialog(null, "Please enter a valid input");
+				
+				return ;
+			}
+			else
+			{
+				MainEduFrame f1=new MainEduFrame();
+				f1.setVisible(true);
+				
+			}
+				}
+			
+				}); 
+		
+		
+		lblNewLabel_17 = new JLabel("Roll Number\r\n");
+		lblNewLabel_17.setBounds(56, 719, 111, 13);
+		lblNewLabel_17.setFont(new Font("Times New Roman", Font.ITALIC, 14));
+		contentPane.add(lblNewLabel_17);
+		
+		JEditorPane editorPane = new JEditorPane();
+		editorPane.setBounds(187, 713, 291, 19);
+		contentPane.add(editorPane);
+		editorPane.setEditable(false);
+		
+		lblNewLabel_18 = new JLabel("Department");
+		lblNewLabel_18.setBounds(535, 708, 94, 19);
+		lblNewLabel_18.setFont(new Font("Times New Roman", Font.ITALIC, 15));
+		contentPane.add(lblNewLabel_18);
+		
+		
+		textField_16 = new JTextField();
+		textField_16.setBounds(648, 713, 264, 19);
+		textField_16.setFont(new Font("Times New Roman", Font.ITALIC, 15));
+		contentPane.add(textField_16);
+		textField_16.setColumns(10);
+		
+		
+
+		
+		
+		
+		
+		
+
+		
+		
+
+		
+		JButton btnNewButton = new JButton("SUBMIT");
+		btnNewButton.setBounds(1019, 759, 121, 28);
+		btnNewButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				String department = textField_16.getText().toUpperCase();
+                String rollNo = generateRollNo(department);
+                editorPane.setText(rollNo);
+               
+				
+				String name = textField.getText();
+			    //int age = (String) textField.getText();
+				String ageString = textField_1.getText();
+				
+			//	int age = Integer.parseInt(ageString);
+			    String dob = textField_2 .getText();
+			    
+			    String gender = (String) comboBox_2.getSelectedItem();
+			    String fathername = textField_3.getText();
+			    String mothername = textField_4.getText();
+			    String foccupation =textField_6.getText();
+			    String moccupation=textField_7.getText();
+			    String bloodgroup=textField_11.getText();
+			    String city = textField_12.getText();
+			    String address =textField_5.getText();
+			    String aadhar= textField_10.getText();
+			    String contact =textField_8.getText();            
+			    String email = textField_9.getText();
+			    
+			    String religion =textField_13.getText();
+			    String caste =textField_14.getText();
+			    String community =textField_15.getText();
+			   
+			    String nationality = (String) comboBox_1.getSelectedItem();
+			    //String rollno=editorPane.getText(); 
+			    String rollno =editorPane.getText();
+			    
+			    	    
+			   
+			    
+			    String u1 ="jdbc:mysql://localhost:3306/admissionsystem";
+				String us1 ="root";
+				String p1 ="SWETHA*1s";
+				
+				Connection conn=null;
+				Statement stmt = null;
+				
+				if(name.isEmpty() ||ageString.isEmpty() ||dob.isEmpty() || fathername.isEmpty() ||mothername.isEmpty() ||foccupation.isEmpty() ||moccupation.isEmpty() ||bloodgroup.isEmpty() ||city.isEmpty() ||address.isEmpty() ||contact.isEmpty() ||email.isEmpty() ||aadhar.isEmpty() ||religion.isEmpty() ||caste.isEmpty() ||community.isEmpty() ||department.isEmpty())
+					
+				{
+					JOptionPane.showMessageDialog(null, "Please enter a valid input");
+					
+					//JOptionPane.showMessageDialog(btnNewButton,"Please enter a valid input","Warning",JOptionPane.WARNING_MESSAGE);
+					return ;
+				}
+				
+				
+				if (!name.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid Input");
+		           return ;
+		        }
+				/*
+				if(Integer.parseInt(ageString) < 17)
+				{
+		            JOptionPane.showMessageDialog(null, "Invalid Input");
+		            return ;
+				}
+				*/
+				if (Integer.parseInt(ageString) < 17) {
+	                JOptionPane.showMessageDialog(null, "You must be at least 17 years old to apply for the university.");
+	                return ;
+	            } else if (Integer.parseInt(ageString) > 25) {
+	                JOptionPane.showMessageDialog(null, "The age you entered is too high. Please enter a valid age.");
+	                return ;
+	            } else {
+	                JOptionPane.showMessageDialog(null, "Age is valid");
+	            }
+		        
+		if (!fathername.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid Father Name. It should only contain letters.");
+		           return;
+		        }
+		if (!mothername.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid Mother Name. It should only contain letters.");
+		            return ;
+		        }
+		if (!foccupation.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid Father Occupation. It should only contain letters.");
+		           return ;
+		        }
+		if (!moccupation.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid Mother Occupation. It should only contain letters.");
+		           return;
+		        }
+		if (!aadhar.matches("\\d{12}")) {
+            JOptionPane.showMessageDialog(null, "Aadhar number must be exactly 12 digits.");
+            return ;
+        }
+ if (!email.endsWith("@gmail.com")) {
+            JOptionPane.showMessageDialog(null, "Email must end with '@gmail.com'.");
+            return ;
+        }
+ if (!contact.matches("\\d{10}")) {
+            JOptionPane.showMessageDialog(null, "Contact number must be exactly 10 digits.");
+           return ;
+        }
+ if (!dob.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            JOptionPane.showMessageDialog(null, "Invalid Date of Birth. It should be in dd/mm/yyyy format.");
+            return ;
+        }
+		if (!city.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid City. It should only contain letters.");
+		           return ;
+		        }
+		if (!religion.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid Religion. It should only contain letters.");
+		           return ;
+		        }
+		if (!caste.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid Caste. It should only contain letters.");
+		            return ;
+		        }
+		if (!community.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid Community. It should only contain letters.");
+		            return;
+		        }
+		if (!department.matches("[a-zA-Z ]+")) {
+		            JOptionPane.showMessageDialog(null, "Invalid Department. It should only contain letters.");
+		           return ;
+		        }
+		
+				try {
+					
+					
+					conn = DriverManager.getConnection(u1,us1,p1);
+					stmt=conn.createStatement();
+					
+					
+					String query1 ="insert into studentpersonaldetails values('"+name+"','"+Integer.parseInt(ageString)+"','"+dob+"','"+gender+"','"+fathername+"','"+mothername+"','"+foccupation+"','"+moccupation+"','"+bloodgroup+"','"+city+"','"+address+"','"+aadhar+"','"+contact+"','"+email+"','"+religion+"','"+caste+"','"+community+"','"+nationality+"','"+rollNo+"','"+department+"')";
+
+					System.out.println(query1);
+					//stmt.executeQuery(sql1);
+					//stmt.executeLargeUpdate(sql1);
+					stmt.executeLargeUpdate(query1);
+					System.out.println("Insert complete");
+					JOptionPane.showMessageDialog(null,"Successfully entered");
+					JOptionPane.showMessageDialog(null,"Get Your Roll Number: "+rollno);
+					
+					if(rollNo.isEmpty())
+					{	//ee.printStackTrace();
+					JOptionPane.showMessageDialog(null,"Roll Number is not generated");
+					}
+					//System.out.println("Insert complete");
+	//1
+					updateSeatAvailability(department);  // Call this after successfully adding a student
+					
+					
+				}
+					
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+				
+				
+				
+				
+			}
+//2
+			
+			
+			private void updateSeatAvailability(String department) {
+				// TODO Auto-generated method stub
+				//public void updateSeatAvailability(String department) {
+				    String query = "UPDATE seat_availability SET available_seats = available_seats - 1 WHERE department = ?";
+
+				    try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+				         PreparedStatement stmt = conn.prepareStatement(query)) {
+				        stmt.setString(1, department);
+				        int rowsAffected = stmt.executeUpdate();
+				        
+				        if (rowsAffected > 0) {
+				            JOptionPane.showMessageDialog(null, "Seat count updated for " + department);
+				        } else {
+				            JOptionPane.showMessageDialog(null, "Error: Could not update seat availability for " + department);
+				        }
+				    } catch (SQLException e) {
+				        JOptionPane.showMessageDialog(null, "Error updating seat availability: " + e.getMessage());
+				    }
+				}
+				
+
+				//======================================
+				
+				
+					
+			
+		}	
+				
+				
+				);
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(btnNewButton);
+		
+		btnNewButton_1 = new JButton("BACK");
+		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		btnNewButton_1.setBounds(681, 759, 102, 27);
+		contentPane.add(btnNewButton_1);
+		btnNewButton_1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				dispose();
+				HomePage f=new HomePage();
+				f.setVisible(true);
+				
+			}
+			
+			
+		});
+		
+		
+						
+		
+	}
+	
+	//generate roll number
+	private String generateRollNo(String department) {
+	       int year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) % 100; // Get last two digits of the year
+	       String deptShortForm = department.length() > 2 ? department.substring(0, 2) : department; // Take first two characters
+	       int currentCount = departmentCounters.getOrDefault(department, 0) + 1;
+	       departmentCounters.put(department, currentCount);
+	       return String.format("%02d%s%02d", year, deptShortForm, currentCount);
+	   }
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+/*
+	
+	public void actionPerformed(ActionEvent e) {
+		//MainEduFrame f1=new MainEduFrame();
+		//f1.setVisible(true);
+		//handleSubmit();
+		
+		
+		
+}
+*/
+}
+
+		
+	
+import java.awt.EventQueue;
+import java.lang.Error;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JRadioButton;
+import java.awt.SystemColor;
+
+public class MainEduFrame extends JFrame implements ActionListener{
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JTextField textField_6;
+	private JTextField textField_7;
+	private JTextField textField_8;
+
+	
+	public static void main(String[] args)  {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainEduFrame frame = new MainEduFrame();
+					frame.setVisible(true);
+					//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	
+	public MainEduFrame() {
+		//getContentPane().setLayout(null);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(0,0, 1200,1009);
+		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.scrollbar);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Institution Studied(SSLC)");
+		lblNewLabel.setBounds(100, 139, 199, 32);
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("STUDENT EDUCATIONAL DETAILS\r\n");
+		lblNewLabel_1.setBounds(436, 42, 390, 32);
+		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 19));
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Instituion Studied(HSC)");
+		lblNewLabel_2.setBounds(100, 230, 171, 32);
+		lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Year of Passing(SSLC)");
+		lblNewLabel_3.setBounds(100, 331, 171, 24);
+		lblNewLabel_3.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Year of Passing(HSC)");
+		lblNewLabel_4.setBounds(100, 401, 159, 32);
+		lblNewLabel_4.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_4);
+		
+		textField = new JTextField();
+		textField.setBounds(321, 147, 710, 19);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(321, 239, 710, 19);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(321, 330, 260, 19);
+		contentPane.add(textField_2);
+		textField_2.setColumns(10);
+		
+		textField_3 = new JTextField();
+		textField_3.setBounds(321, 410, 260, 19);
+		contentPane.add(textField_3);
+		textField_3.setColumns(10);
+		
+		JLabel lblNewLabel_5 = new JLabel("Marks in Percentage(SSLC)");
+		lblNewLabel_5.setBounds(639, 323, 204, 32);
+		lblNewLabel_5.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_6 = new JLabel("Marks in Percentage(HSC)");
+		lblNewLabel_6.setBounds(639, 406, 199, 21);
+		lblNewLabel_6.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_6);
+		
+		textField_4 = new JTextField();
+		textField_4.setBounds(879, 330, 152, 19);
+		contentPane.add(textField_4);
+		textField_4.setColumns(10);
+		
+		textField_5 = new JTextField();
+		textField_5.setBounds(879, 415, 152, 19);
+		contentPane.add(textField_5);
+		textField_5.setColumns(10);
+		
+		JLabel lblNewLabel_7 = new JLabel("Cut Off(HSC)");
+		lblNewLabel_7.setBounds(100, 510, 141, 13);
+		lblNewLabel_7.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		contentPane.add(lblNewLabel_7);
+		
+		JLabel lblNewLabel_8 = new JLabel("Branch Preferred");
+		lblNewLabel_8.setBounds(100, 595, 159, 15);
+		lblNewLabel_8.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		contentPane.add(lblNewLabel_8);
+		
+		textField_6 = new JTextField();
+		textField_6.setBounds(321, 509, 260, 19);
+		contentPane.add(textField_6);
+		textField_6.setColumns(10);
+		
+		JLabel lblNewLabel_9 = new JLabel("Accomodation Type");
+		lblNewLabel_9.setBounds(644, 505, 182, 21);
+		lblNewLabel_9.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_9);
+		
+		JLabel lblNewLabel_10 = new JLabel("Expected Graduation(In Year)");
+		lblNewLabel_10.setBounds(639, 588, 219, 26);
+		lblNewLabel_10.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_10);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(321, 587, 260, 21);
+		comboBox.setFont(new Font("Times New Roman", Font.ITALIC, 15));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"BE CIVIL", "BE MECH", "BE CSE", "BTECH IT", "BTECH AIDS", "BE BME", "BE ECE", "BE EEE"}));
+		contentPane.add(comboBox);
+		
+		textField_7 = new JTextField();
+		textField_7.setBounds(879, 594, 152, 19);
+		contentPane.add(textField_7);
+		textField_7.setColumns(10);
+		
+		JButton btnNewButton = new JButton("Submit");
+		btnNewButton.setBounds(1016, 697, 118, 32);
+		btnNewButton.addActionListener(this);
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(btnNewButton);
+		
+		JLabel lblNewLabel_11 = new JLabel("Roll Number");
+		lblNewLabel_11.setBounds(100, 662, 141, 31);
+		lblNewLabel_11.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		contentPane.add(lblNewLabel_11);
+		
+		textField_8 = new JTextField();
+		textField_8.setBounds(321, 662, 260, 32);
+		contentPane.add(textField_8);
+		textField_8.setColumns(10);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(879, 500, 182, 32);
+		comboBox_1.setFont(new Font("Times New Roman", Font.ITALIC, 15));
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Hosteller", "Dayscholar"}));
+		contentPane.add(comboBox_1);
+		
+		JButton btnNewButton_1 = new JButton("BACK\r\n");
+		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		btnNewButton_1.setBounds(857, 697, 111, 32);
+		contentPane.add(btnNewButton_1);
+		btnNewButton_1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				dispose();
+				HomePage f=new HomePage();
+				
+				f.setVisible(true);
+				//frame frame = new frame();
+				//setVisible(false);
+				
+			
+			}
+			
+			
+		});
+		
+		
+btnNewButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e)
+			{	
+			  
+				String InStudiedSSLC=textField.getText();
+				String InStudiedHSC=textField_1 .getText();
+				String YearOfPassingSSLC=textField_2.getText();
+				String YearOfPassingHSC=textField_3.getText();
+				String MarksInPercentageSSLC=textField_4.getText();
+				String MarksInPercentageHSC=textField_5.getText();
+				String CutOff =textField_6.getText();
+				//String AccomodationType=JComboBox.getComboText();
+				String Expectedgraduation=textField_7.getText();
+				String rollno=textField_8.getText();
+				String selectedOption=null; 
+				String accomodationtype = (String) comboBox_1.getSelectedItem();
+				
+			    
+			    String u1 ="jdbc:mysql://localhost:3306/admissionsystem";
+				String us1 ="root";
+				String p1 ="SWETHA*1s";
+				
+				Connection conn=null;
+				Statement stmt = null;
+				if(InStudiedSSLC.isEmpty() || InStudiedHSC.isEmpty() || YearOfPassingSSLC.isEmpty() || YearOfPassingHSC.isEmpty() ||MarksInPercentageSSLC.isEmpty() || MarksInPercentageHSC.isEmpty() || CutOff.isEmpty() || rollno.isEmpty() || accomodationtype.isEmpty() ||Expectedgraduation.isEmpty())
+				{
+					JOptionPane.showMessageDialog(null, "Please enter a valid input");
+					   
+					return ;
+				}
+				
+				
+					
+					try {
+			            
+						if (!InStudiedSSLC.matches("[a-zA-Z0-9&\\-\\., ]+")) {
+						    JOptionPane.showMessageDialog(null, "Invalid Institution Name. Please use valid characters.");
+						    return;
+						}
+						if (!InStudiedHSC.matches("[a-zA-Z0-9&\\-\\., ]+")) {
+						    JOptionPane.showMessageDialog(null, "Invalid HSC Institution Name. Please use valid characters.");
+						    return;
+						}
+
+						 if (!MarksInPercentageSSLC.matches("\\d{2}")) {
+					            JOptionPane.showMessageDialog(null, "SSLC Marks in Percentage must be exactly 2 digits.");
+					            
+					           return ;
+					        }
+						 if (!MarksInPercentageHSC.matches("\\d{2}")) {
+					            JOptionPane.showMessageDialog(null, "HSC Marks in Percentage must be exactly 2 digits.");
+					            
+					            return ;
+					           
+					        }
+						
+						 if (!YearOfPassingSSLC.matches("\\d{4}")) {
+					            JOptionPane.showMessageDialog(null, "Year of Passing SSLC must contatin 4 digits.");
+					           
+					            return ;
+					            
+					        }
+						 if(!YearOfPassingHSC.matches("\\d{4}"))
+						 {
+							 
+							 JOptionPane.showMessageDialog(null, "Year of Passing HSC must contain 4 digits. ");
+							 return ;
+						 }
+						
+						 int cutoffmark = Integer.parseInt(CutOff);
+				            if (cutoffmark < 200 && cutoffmark >100) {
+				                JOptionPane.showMessageDialog(null, "CutOff mark is valid.");
+				               
+				                //return ;
+				            }
+				            else
+				            {
+				            	JOptionPane.showMessageDialog(null, "CutOff marks is invalid");
+				            	return ;
+				            }
+			        } catch (NumberFormatException ee) {
+			            JOptionPane.showMessageDialog(null, "Invalid cutoff. It should be an integer.");
+			           
+			           return;
+			        }
+			
+					
+					
+					
+					 try {
+					 if (!Expectedgraduation.matches("\\d{4}")) {
+				            JOptionPane.showMessageDialog(null, "Expected graduation must contatin 4 digits.");
+				           
+				            return ;
+				        }
+					 if (!isValidRollNumber(rollno)) {
+				            JOptionPane.showMessageDialog(null, "Invalid Roll Number format. It should follow the format: 24CS01");
+				            return; // Exit if the roll number is not valid
+				        }
+					 
+					
+					
+					
+					 
+					
+						 
+					else
+						
+					{	
+						String u ="jdbc:mysql://localhost:3306/admissionsystem";
+						String us ="root";
+						String p ="SWETHA*1s";
+						
+							conn = DriverManager.getConnection(u,us,p);
+							stmt=conn.createStatement();	
+						String query ="insert into studenteducationaldetails values('"+InStudiedSSLC+"','"+InStudiedHSC+"',"+YearOfPassingSSLC+","+YearOfPassingHSC+","+MarksInPercentageSSLC+","+MarksInPercentageHSC+","+CutOff+",'"+accomodationtype+"',"+Expectedgraduation+",'"+rollno+"')";
+						
+						System.out.println(query);
+						
+						
+						
+						stmt.executeUpdate(query);
+						System.out.println("Insert complete");
+						
+							JOptionPane.showMessageDialog(null,"Successfully entered");
+							//dispose();
+						
+					}
+					
+					
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+				
+				
+				
+			}
+
+			
+				// TODO Auto-generated method stub
+				public boolean isValidRollNumber(String rollNumber) {
+				    // Regular expression for validating the roll number (e.g., 24CS01)
+				    String rollNumberPattern = "^[0-9]{2}[A-Za-z]{2}[0-9]{2}$";
+				    
+				    // Create a pattern object
+				    Pattern pattern = Pattern.compile(rollNumberPattern);
+				    // Create a matcher object to match the input string against the pattern
+				    Matcher matcher = pattern.matcher(rollNumber);
+				    
+				    // Return whether the input roll number matches the pattern
+				    return matcher.matches();
+				}
+				//===========================================
+			
+			
+			
+		}	
+				
+				
+				);
+		
+		
+			}
+
+
+	
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+}
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.awt.Color;
+import java.awt.SystemColor;
+
+public class UpdateStudent extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private static JTextField textField;
+	private static JTextField textField_1;
+	private static JTextField textField_2;
+	private static JButton btnNewButton_1;
+	private static JTextField textField_3;
+	private JLabel lblNewLabel_4;
+	private static JTextField textField_4;
+	private static JLabel lblNewLabel_5;
+	private static JTextField textField_5;
+	private JLabel lblNewLabel_6;
+	private static JTextField textField_6;
+	private JLabel lblNewLabel_7;
+	private static JTextField textField_7;
+	private JLabel lblNewLabel_8;
+	private static JTextField textField_8;
+	private JLabel lblNewLabel_9;
+	private static JTextField textField_9;
+	private JLabel lblNewLabel_10;
+	private static JTextField textField_10;
+	private JLabel lblNewLabel_11;
+	private static JTextField textField_11;
+	private JLabel lblNewLabel_12;
+	private static JTextField textField_12;
+	private JLabel lblNewLabel_13;
+	private static JTextField textField_13;
+	private JButton btnNewButton_2;
+	private JButton btnNewButton_3;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UpdateStudent frame = new UpdateStudent();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public UpdateStudent() {
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Update Student Details ");
+		setBounds(100, 100, 916, 566);
+		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.scrollbar);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("RollNumber");
+		lblNewLabel.setBounds(36, 50, 98, 16);
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setBounds(162, 50, 168, 19);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JButton btnNewButton = new JButton("Fetch Details");
+		btnNewButton.setBounds(177, 104, 137, 21);
+		btnNewButton.setFont(new Font("Times New Roman", Font.ITALIC, 15));
+		contentPane.add(btnNewButton);
+		
+		
+		btnNewButton.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            try {
+	            	final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem"; // Update with your DB URL
+	                final String USER = "root"; // Replace with your MySQL username
+	                final String PASSWORD = "SWETHA*1s"; // Replace with your MySQL password
+	               
+	                Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+	                //String rollno=textField.getText();
+	                String query = "SELECT name,age,dob,father_name,mother_name,father_occupation,mother_occupation,blood_group,city_of_residence,address,aadhar,contact,email FROM studentpersonaldetails WHERE rollno = ?";
+	                
+	                PreparedStatement pstmt = conn.prepareStatement(query);
+	                pstmt.setString(1, textField.getText());
+	                ResultSet rs = pstmt.executeQuery();
+
+	                if (rs.next()) {
+	                    textField_1.setText(rs.getString("name"));
+	                    textField_2.setText(rs.getString("age"));
+	                    //textField.setText(rs.getString("rollno"));
+	    	            //String name=textField_1.setText(rs.getString(""));
+	    	            //String age=textField_2.getText();
+	    	            String ageString = textField_2.getText();
+	    	        	int age = Integer.parseInt(ageString);
+	    	        	textField_3.setText(rs.getString("dob"));
+	    	            textField_4.setText(rs.getString("father_name"));
+	    	            textField_5.setText(rs.getString("mother_name"));
+	    	            textField_6.setText(rs.getString("father_occupation"));
+	    	            textField_7.setText(rs.getString("mother_occupation"));
+	    	            textField_8.setText(rs.getString("blood_group"));
+	    	            textField_9.setText(rs.getString("city_of_residence"));
+	    	            textField_10.setText(rs.getString("address"));
+	    	            textField_13.setText(rs.getString("aadhar"));
+	    	            textField_11.setText(rs.getString("contact"));            
+	    	            textField_12.setText(rs.getString("email"));
+	                    
+	                } else {
+	                    JOptionPane.showMessageDialog(null, "Student not found.");
+	                }
+	                conn.close();
+	            } catch (Exception ex) {
+	                ex.printStackTrace();
+	                JOptionPane.showMessageDialog(null, "Error fetching student details.");
+	            }
+	        }
+	    });
+		
+		
+		
+		JLabel lblNewLabel_1 = new JLabel("Name");
+		lblNewLabel_1.setBounds(36, 173, 82, 16);
+		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Age");
+		lblNewLabel_2.setBounds(36, 216, 87, 27);
+		lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_2);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(162, 173, 168, 19);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
+		//textField_1.setEditable(false);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(162, 221, 168, 19);
+		contentPane.add(textField_2);
+		textField_2.setColumns(10);
+		//textField_2.setEditable(false);
+		
+		btnNewButton_1 = new JButton("UPDATE\r\n");
+		btnNewButton_1.setBounds(698, 451, 112, 34);
+		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		contentPane.add(btnNewButton_1);
+		
+		JLabel lblNewLabel_3 = new JLabel("DOB");
+		lblNewLabel_3.setBounds(36, 276, 45, 13);
+		lblNewLabel_3.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_3);
+		
+		textField_3 = new JTextField();
+		textField_3.setBounds(162, 275, 168, 19);
+		contentPane.add(textField_3);
+		textField_3.setColumns(10);
+		
+		lblNewLabel_4 = new JLabel("Father Name");
+		lblNewLabel_4.setBounds(36, 325, 106, 13);
+		lblNewLabel_4.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_4);
+		
+		textField_4 = new JTextField();
+		textField_4.setBounds(162, 324, 168, 19);
+		contentPane.add(textField_4);
+		textField_4.setColumns(10);
+		
+		lblNewLabel_5 = new JLabel("Mother Name");
+		lblNewLabel_5.setBounds(36, 373, 106, 13);
+		lblNewLabel_5.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_5);
+		
+		textField_5 = new JTextField();
+		textField_5.setBounds(162, 372, 168, 19);
+		contentPane.add(textField_5);
+		textField_5.setColumns(10);
+		
+		lblNewLabel_6 = new JLabel("Father Occupation");
+		lblNewLabel_6.setBounds(36, 416, 147, 19);
+		lblNewLabel_6.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_6);
+		
+		textField_6 = new JTextField();
+		textField_6.setBounds(193, 416, 137, 19);
+		contentPane.add(textField_6);
+		textField_6.setColumns(10);
+		
+		lblNewLabel_7 = new JLabel("Mother Occupation");
+		lblNewLabel_7.setBounds(36, 464, 137, 21);
+		lblNewLabel_7.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_7);
+		
+		textField_7 = new JTextField();
+		textField_7.setBounds(193, 467, 137, 19);
+		contentPane.add(textField_7);
+		textField_7.setColumns(10);
+		
+		lblNewLabel_8 = new JLabel("Blood Group");
+		lblNewLabel_8.setBounds(477, 48, 90, 19);
+		lblNewLabel_8.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_8);
+		
+		textField_8 = new JTextField();
+		textField_8.setBounds(592, 50, 218, 19);
+		contentPane.add(textField_8);
+		textField_8.setColumns(10);
+		
+		lblNewLabel_9 = new JLabel("City Of Residence");
+		lblNewLabel_9.setBounds(436, 104, 131, 19);
+		lblNewLabel_9.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_9);
+		
+		textField_9 = new JTextField();
+		textField_9.setBounds(592, 106, 218, 19);
+		contentPane.add(textField_9);
+		textField_9.setColumns(10);
+		
+		lblNewLabel_10 = new JLabel("Address");
+		lblNewLabel_10.setBounds(497, 175, 70, 13);
+		lblNewLabel_10.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_10);
+		
+		textField_10 = new JTextField();
+		textField_10.setBounds(592, 177, 218, 27);
+		contentPane.add(textField_10);
+		textField_10.setColumns(10);
+		
+		lblNewLabel_11 = new JLabel("Contact");
+		lblNewLabel_11.setBounds(497, 242, 68, 13);
+		lblNewLabel_11.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_11);
+		
+		textField_11 = new JTextField();
+		textField_11.setBounds(592, 241, 218, 19);
+		contentPane.add(textField_11);
+		textField_11.setColumns(10);
+		
+		lblNewLabel_12 = new JLabel("Email");
+		lblNewLabel_12.setBounds(522, 308, 45, 13);
+		lblNewLabel_12.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_12);
+		
+		textField_12 = new JTextField();
+		textField_12.setBounds(592, 307, 218, 19);
+		contentPane.add(textField_12);
+		textField_12.setColumns(10);
+		
+		lblNewLabel_13 = new JLabel("Aadhar");
+		lblNewLabel_13.setBounds(510, 373, 57, 13);
+		lblNewLabel_13.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 17));
+		contentPane.add(lblNewLabel_13);
+		
+		textField_13 = new JTextField();
+		textField_13.setBounds(592, 372, 218, 19);
+		contentPane.add(textField_13);
+		textField_13.setColumns(10);
+		
+		btnNewButton_2 = new JButton("CLEAR");
+		btnNewButton_2.setBounds(560, 451, 98, 34);
+		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		contentPane.add(btnNewButton_2);
+		
+		btnNewButton_3 = new JButton("BACK\r\n");
+		btnNewButton_3.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnNewButton_3.setBounds(421, 451, 98, 34);
+		contentPane.add(btnNewButton_3);
+		btnNewButton_3.addActionListener(new ActionListener()
+				{
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+						HomePage page= new HomePage();
+						page.setVisible(true);
+						
+					}
+			
+				});
+	
+		
+		btnNewButton_2.addActionListener(new ActionListener() {
+				
+		public void actionPerformed(ActionEvent e) {
+	        if (e.getSource() == btnNewButton_2) {
+	           // String username = userTextField.getText();
+	            //String password = String.valueOf(passwordField.getPassword());
+	            textField.setText("");
+	            textField_1.setText("");
+	            //String age=textField_2.getText();
+	            textField_2.setText("");
+	        	//int age = Integer.parseInt(ageString);
+	        	textField_3.setText("");
+	            textField_4.setText("");
+	            textField_5.setText("");
+	            textField_6.setText("");
+	            textField_7.setText("");
+	            textField_8.setText("");
+	            textField_9.setText("");
+	            textField_10.setText("");
+	            textField_13.setText("");
+	            textField_11.setText("");            
+	            textField_12.setText("");
+	            
+	            
+	        }       
+		}
+	    });
+
+		
+		
+		
+		btnNewButton_1.addActionListener(new ActionListener()
+		{
+			
+			public void actionPerformed(ActionEvent e)
+			{	try {
+				//final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem"; // Update with your DB URL
+	            //final String USER = "root"; // Replace with your MySQL username
+	            //final String PASSWORD = "SWETHA*1s"; // Replace with your MySQL password
+				 String rollno=textField.getText();
+	            
+	            int response = JOptionPane.showConfirmDialog(null,
+	                    "Are you sure you want to update student with Roll No: " + rollno + "?",
+	                    "Confirm Deletion",
+	                    JOptionPane.YES_NO_OPTION,
+	                    JOptionPane.QUESTION_MESSAGE);
+
+	            if (response == JOptionPane.YES_OPTION) {
+	                boolean success = updateStudent(rollno);
+	                if (success) {
+	                    JOptionPane.showMessageDialog(null, "Student updated successfully.");
+	                } else {
+	                    JOptionPane.showMessageDialog(null, "Error updating student or roll number not found.");
+	                }
+	            }
+	            
+	            
+	            
+	            
+	        } 
+			catch (Exception ex) {
+	            //ex.printStackTrace();
+				System.out.print("error");
+	           // JOptionPane.showMessageDialog(null, "Error updating student details.");
+	        }
+	            
+			}
+		});;
+		
+	
+
+	}
+
+
+
+private static boolean updateStudent(String rollNo) {
+    //String sql = "DELETE FROM studentpersonaldetails WHERE rollno = ?"; // Ensure this is correct
+	final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem"; // Update with your DB URL
+    final String USER = "root"; // Replace with your MySQL username
+    final String PASSWORD = "SWETHA*1s"; // Replace with your MySQL password
+    String rollno=textField.getText();
+    String name=textField_1.getText();
+   // String age=textField_2.getText();
+    String ageString = textField_2.getText();
+	int age = Integer.parseInt(ageString);
+	String dob = textField_3.getText();
+    
+   // String gender = (String) comboBox_2.getSelectedItem();
+    String fathername = textField_4.getText();
+    String mothername = textField_5.getText();
+    String foccupation =textField_6.getText();
+    String moccupation=textField_7.getText();
+    String bloodgroup=textField_8.getText();
+    String city = textField_9.getText();
+    String address =textField_10.getText();
+    String aadhar= textField_13.getText();
+    String contact =textField_11.getText();            
+    String email = textField_12.getText();
+    //String aadhar= textField_10.getText();
+    if (!name.matches("[a-zA-Z ]+")) {
+        JOptionPane.showMessageDialog(null, "Invalid Input");
+       return false;
+    }
+    /*
+    if(Integer.parseInt(ageString) < 17)
+	{
+        JOptionPane.showMessageDialog(null, "Invalid age ");
+//		return ;
+        return false;
+	}
+	*/
+    if (Integer.parseInt(ageString) < 17) {
+        JOptionPane.showMessageDialog(null, "You must be at least 17 years old to apply for the university.");
+        return false;
+    } else if (Integer.parseInt(ageString) > 25) {
+        JOptionPane.showMessageDialog(null, "The age you entered is too high. Please enter a valid age.");
+        return false;
+    } else {
+        JOptionPane.showMessageDialog(null, "Updating your details.");
+    }
+    
+    if (!fathername.matches("[a-zA-Z ]+")) {
+        JOptionPane.showMessageDialog(null, "Invalid Father Name. It should only contain letters.");
+       return false;
+    }
+    if (!mothername.matches("[a-zA-Z ]+")) {
+        JOptionPane.showMessageDialog(null, "Invalid Mother Name. It should only contain letters.");
+       return false ;
+    }
+    if (!foccupation.matches("[a-zA-Z ]+")) {
+        JOptionPane.showMessageDialog(null, "Invalid Father Occupation. It should only contain letters.");
+        return false;
+    }
+if (!moccupation.matches("[a-zA-Z ]+")) {
+        JOptionPane.showMessageDialog(null, "Invalid Mother Occupation. It should only contain letters.");
+       return false;
+    }
+ if (!aadhar.matches("\\d{12}")) {
+JOptionPane.showMessageDialog(null, "Aadhar number must be exactly 12 digits.");
+ return false ;
+}
+if (!email.endsWith("@gmail.com")) {
+JOptionPane.showMessageDialog(null, "Email must end with '@gmail.com'.");
+ return false ;
+}
+if (!contact.matches("\\d{10}")) {
+JOptionPane.showMessageDialog(null, "Contact number must be exactly 10 digits.");
+ return false ;
+}
+if (!dob.matches("\\d{2}/\\d{2}/\\d{4}")) {
+JOptionPane.showMessageDialog(null, "Invalid Date of Birth. It should be in dd/mm/yyyy format.");
+return false;
+}
+if (!city.matches("[a-zA-Z ]+")) {
+        JOptionPane.showMessageDialog(null, "Invalid City. It should only contain letters.");
+       return false;
+    }
+
+    
+
+    //Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+    String query = "update studentpersonaldetails set Name = '"+name+"', Age = '"+age+"', DOB='"+dob+"',Father_Name='"+fathername+"',Mother_Name='"+mothername+"',Father_Occupation='"+foccupation+"',Mother_Occupation='"+moccupation+"',Blood_group='"+bloodgroup+"',City_Of_Residence='"+city+"',Address='"+address+"',Contact='"+contact+"',Email='"+email+"',Aadhar='"+aadhar+"' WHERE RollNo = '"+rollno+"'";
+    
+    //PreparedStatement pstmt = conn.prepareStatement(query);
+    System.out.println(query);
+    
+
+    // Ensure rollNo is not empty or null before proceeding
+    if (rollNo == null || rollNo.isEmpty()) {
+        return false;
+    }
+
+    try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+        // Set the parameter for the prepared statement
+       // preparedStatement.setString(1, rollNo);
+       
+        // Execute the update
+        int rowsAffected = preparedStatement.executeUpdate();
+        return rowsAffected > 0; // Return true if a row was deleted
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false; // Return false if an exception occurs
+    }
+}
+}
+
+
+
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.SystemColor;
+
+public class DeleteStudents extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField;
+	 private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
+	    private static final String USER = "root";
+	    private static final String PASSWORD = "SWETHA*1s";
+
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					DeleteStudents frame = new DeleteStudents();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+
+	
+	public DeleteStudents() {
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Delete Student Details ");
+		setBounds(100, 100, 454, 346);
+		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.scrollbar);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Enter Roll Number\r\n");
+		lblNewLabel.setBounds(57, 72, 127, 25);
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		contentPane.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setBounds(201, 67, 127, 36);
+		textField.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JButton btnNewButton = new JButton("DELETE");
+		btnNewButton.setBounds(135, 165, 115, 27);
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("CLEAR");
+		btnNewButton_1.setBounds(289, 164, 109, 28);
+		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		contentPane.add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("BACK");
+		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnNewButton_2.setBounds(217, 236, 111, 25);
+		contentPane.add(btnNewButton_2);
+		btnNewButton_2.addActionListener(new ActionListener()
+				{
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+						dispose();
+						HomePage hp = new HomePage();
+						hp.setVisible(true);
+						
+					}
+			
+				});;
+		btnNewButton_1.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+		        if (e.getSource() == btnNewButton_1) {
+		          
+		            textField.setText("");
+		           
+		        }       
+			}
+		    });
+
+			
+		
+		
+		btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String rollNo = textField.getText();
+                if (rollNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(DeleteStudents.this, "Please enter a roll number.");
+                } else {
+                    int response = JOptionPane.showConfirmDialog(DeleteStudents.this,
+                            "Are you sure you want to remove student with Roll No: " + rollNo + "?",
+                            "Confirm Deletion",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                   
+                    if (response == JOptionPane.YES_OPTION) {
+                        boolean success = deleteStudent(rollNo);
+                        if (success) {
+                            JOptionPane.showMessageDialog(DeleteStudents.this, "Student Personal details deleted successfully.");
+                        } else {
+                            JOptionPane.showMessageDialog(DeleteStudents.this, "Error deleting student or roll number not found.");
+                        }
+                        boolean success1 = removeStudent(rollNo);
+                        //rollNo.setText("");
+                        if (success) {
+                            JOptionPane.showMessageDialog(DeleteStudents.this, "Student Educational details deleted successfully.");
+                        } else {
+                            JOptionPane.showMessageDialog(DeleteStudents.this, "Error deleting student or roll number not found.");
+                        }
+                    }
+                }
+            }
+
+            
+
+			private boolean removeStudent(String rollNo) {
+				// TODO Auto-generated method stub
+				
+				
+					String sql1 = "DELETE FROM studenteducationaldetails WHERE rollno = ?"; 
+					try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+				             PreparedStatement preparedStatement = connection.prepareStatement(sql1)) {
+
+				            // Set the parameter for the prepared statement
+				            preparedStatement.setString(1, rollNo);
+				           
+				            // Execute the update
+				            int rowsAffected = preparedStatement.executeUpdate();
+				            
+				            System.out.print("Student deleted successfully");
+				           // rollNo.setText("");
+				            return rowsAffected > 0; // Return true if a row was deleted
+				        } 
+				        catch (SQLException e) {
+				            e.printStackTrace();
+				            return false; // Return false if an exception occurs
+				        }
+					
+				}
+	        });
+
+			}
+
+
+
+			private boolean deleteStudent(String rollNo) {
+                String sql = "DELETE FROM studentpersonaldetails WHERE rollno = ?"; // Ensure this is correct
+
+                // Ensure rollNo is not empty or null before proceeding
+                if (rollNo == null || rollNo.isEmpty()) {
+                    return false;
+                }
+
+                try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+                     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+                    // Set the parameter for the prepared statement
+                    preparedStatement.setString(1, rollNo);
+                   
+                    // Execute the update
+ //1
+                    String department = getDepartmentOfStudent(rollNo);
+                    int rowsAffected = preparedStatement.executeUpdate();
+                 //2
+                    increaseSeatAvailability(department);
+                    
+                    System.out.print("Student deleted successfully");
+                    
+                    return rowsAffected > 0; // Return true if a row was deleted
+                } 
+                catch (SQLException e) {
+                    e.printStackTrace();
+                    return false; // Return false if an exception occurs
+                }
+                         
+                
+                 
+                
+            }
+
+
+//3	
+			
+			
+			private void increaseSeatAvailability(String department) {
+			    String query = "SELECT available_seats, total_seats FROM seat_availability WHERE department = ?";
+			    try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+			         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+			        preparedStatement.setString(1, department);
+			        ResultSet rs = preparedStatement.executeQuery();
+
+			        if (rs.next()) {
+			            int availableSeats = rs.getInt("available_seats");
+			            int totalSeats = rs.getInt("total_seats");
+
+			            // Check if we can increase the seat count
+			            if (availableSeats < totalSeats) {
+			                // If available seats are less than total seats, increment the available seats
+			                String updateQuery = "UPDATE seat_availability SET available_seats = available_seats + 1 WHERE department = ?";
+			                try (PreparedStatement updateStmt = connection.prepareStatement(updateQuery)) {
+			                    updateStmt.setString(1, department);
+			                    int rowsAffected = updateStmt.executeUpdate();
+
+			                    if (rowsAffected > 0) {
+			                        System.out.println("Seat count updated for department: " + department);
+			                    } else {
+			                        System.out.println("Error updating seat availability for department: " + department);
+			                    }
+			                }
+			            } else {
+			                System.out.println("Cannot increase seat availability. The department has reached its seat limit.");
+			                // Optionally show a message to the user if needed
+			                JOptionPane.showMessageDialog(DeleteStudents.this, "Cannot increase seat availability. The department has reached its seat limit.");
+			            }
+			        }
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			    }
+			}
+			
+
+			
+			
+				
+			
+
+
+//4
+		
+			
+			private String getDepartmentOfStudent(String rollNo) {
+				// TODO Auto-generated method stub
+				//private String getDepartmentOfStudent(String rollNo) {
+	                String department = null;
+	                String query = "SELECT department FROM studentpersonaldetails WHERE rollno = ?";
+	                try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+	                     PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+	                    preparedStatement.setString(1, rollNo);
+	                    ResultSet rs = preparedStatement.executeQuery();
+
+	                    if (rs.next()) {
+	                        department = rs.getString("department");
+	                    }
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
+	                return department;
+	          
+			}
+			
+
+
+
+
+
+}
+
+
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.awt.SystemColor;
+
+public class DisplayStudent extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
+    private static final String DB_USER = "root";  // Change this to your MySQL username
+    private static final String DB_PASSWORD = "SWETHA*1s";  // Change this to your MySQL password
+
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					
+					DisplayStudent frame = new DisplayStudent();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public DisplayStudent() {
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Display Student Details ");
+		setBounds(100, 100, 573, 324);
+		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.scrollbar);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JButton btnNewButton = new JButton("Display Student Personal Details\r\n");
+		btnNewButton.setBounds(72, 65, 350, 33);
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		contentPane.add(btnNewButton);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				showStudentDetails();
+			}
+
+			private void showStudentDetails() {
+			
+			        // Connect to the database and fetch student details
+			        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+			            String query = "SELECT * FROM studentpersonaldetails";
+			            Statement stmt = connection.createStatement();
+			            ResultSet rs = stmt.executeQuery(query);
+
+			            // Create a new frame for displaying student details
+			            JFrame detailsFrame = new JFrame("Student Details");
+			            detailsFrame.setSize(600, 300);
+			            detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			            detailsFrame.setLocationRelativeTo(null);  // Center the window
+
+			            // Define column names for the table
+			            String[] columns = {"Name", "Age", "Department", "Rollno ", "Address","DOB","Gender","Father Name","Mother Name","Father Occupation","Mother Occupation","Blood Group","City Of Residence","Contact","Email","Aadhar","Religion","Caste","Community","Nationality"};
+			            DefaultTableModel model = new DefaultTableModel(columns, 0) {
+			                @Override
+			                public boolean isCellEditable(int row, int column) {
+			                    return false; // Make all cells non-editable
+			                }
+			            };
+
+			            
+			            // Create a DefaultTableModel to hold the data
+			            //DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+			            // Loop through the ResultSet and add each row of student data to the model
+			            while (rs.next()) {
+			                Object[] row = {
+			                    rs.getString("name"),
+			                    rs.getInt("age"),
+			                    rs.getString("department"),
+			                    rs.getString("rollno"),
+			                    rs.getString("address"),
+			                    rs.getString("dob"),
+			                    rs.getString("gender"),
+			                    rs.getString("Father_Name"),
+			                    rs.getString("Mother_Name"),
+			                    rs.getString("Father_Occupation"),
+			                    rs.getString("Mother_Occupation"),
+			                    rs.getString("Blood_group"),
+			                    rs.getString("City_Of_Residence"),
+			                    rs.getString("Contact"),
+			                    rs.getString("email"),
+			                    rs.getString("Aadhar"),
+			                    rs.getString("Religion"),
+			                    rs.getString("Caste"),
+			                    rs.getString("Community"),
+			                    rs.getString("Nationality"),
+			                    
+			                   
+			                   
+			                };
+			                model.addRow(row);
+			            }
+
+			            // Create a JTable to display the student data and wrap it in a JScrollPane
+			            JTable table = new JTable(model);
+			            JScrollPane scrollPane = new JScrollPane(table);
+			            //scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+			            
+
+			            // Add the JScrollPane containing the table to the details frame
+			            detailsFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+			            // Make the details frame visible
+			            detailsFrame.setVisible(true);
+
+			        } catch (SQLException e) {
+			            // Show an error message if there's an issue connecting to the database
+			            JOptionPane.showMessageDialog(null, "Error connecting to database: " + e.getMessage());
+			        }
+			    
+				// TODO Auto-generated method stub
+				
+			}
+		}
+				);
+		
+		
+		JButton btnNewButton_1 = new JButton("Display Student Educational Details");
+		btnNewButton_1.setBounds(72, 148, 350, 33);
+		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		contentPane.add(btnNewButton_1);
+		
+		JButton btnNewButton_2 = new JButton("BACK");
+		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnNewButton_2.setBounds(331, 226, 91, 33);
+		contentPane.add(btnNewButton_2);
+		btnNewButton_2.addActionListener(new ActionListener()
+				{
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+						HomePage hp=new HomePage();
+						hp.setVisible(true);
+						
+						
+					}
+			
+			
+				});
+		btnNewButton_1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // When the button is clicked, show the student details in a new window
+                showPersonalDetails();
+            }
+
+			private void showPersonalDetails() {
+				// private static void showStudentDetails() {
+				        // Connect to the database and fetch student details
+				        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+				            String query = "SELECT * FROM studenteducationaldetails";
+				            Statement stmt = connection.createStatement();
+				            ResultSet rs = stmt.executeQuery(query);
+
+				            // Create a new frame for displaying student details
+				            JFrame detailsFrame = new JFrame("Student Details");
+				            detailsFrame.setSize(600, 300);
+				            detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				            detailsFrame.setLocationRelativeTo(null);  // Center the window
+
+				            // Define column names for the table
+				            String[] columns= {"Roll Number","CutOff","Institution Studiend in SSLC","SSLC Marks in Percentage","Institution Studied in HSC","HSC Marks in Percentage","Year Of Passing in SSLC","Year Of Passing in HSC","Accomodation Type","Expected Graduation"};
+				            DefaultTableModel model = new DefaultTableModel(columns, 0) {
+				                @Override
+				                public boolean isCellEditable(int row, int column) {
+				                    return false; // Make all cells non-editable
+				                }
+				            };
+
+				            
+				            // Create a DefaultTableModel to hold the data
+				            
+
+				            // Loop through the ResultSet and add each row of student data to the model
+				            while (rs.next()) {
+				                Object[] row = {
+				                		rs.getString("rollno"),
+				                		rs.getInt("CutOff"),
+				                    rs.getString("Institution_Studied_SSLC"),
+				                    rs.getInt("Marks_In_Percentage_SSLC"),
+				                    rs.getString("Institution_Studied_HSC"),                   
+				                    rs.getInt("Marks_In_Percentage_HSC"),
+				                    rs.getString("Year_Of_Passing_SSLC"),
+				                    //rs.getString("dob"),
+				                    rs.getString("Year_Of_Passing_HSC"),
+				                    rs.getString("Accomodation_Type"),
+				                    rs.getString("Expected_Graduation_In_Years"),
+				                    
+				                   
+				                };
+				                model.addRow(row);
+				            }
+
+				            // Create a JTable to display the student data and wrap it in a JScrollPane
+				            JTable table = new JTable(model);
+				            JScrollPane scrollPane = new JScrollPane(table);
+
+				            // Add the JScrollPane containing the table to the details frame
+				            detailsFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+				            // Make the details frame visible
+				            detailsFrame.setVisible(true);
+
+				        } catch (SQLException e) {
+				            // Show an error message if there's an issue connecting to the database
+				            JOptionPane.showMessageDialog(null, "Error connecting to database: " + e.getMessage());
+				        }
+				 
+				// TODO Auto-generated method stub
+				
+			}
+        });
+	}
+}
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import java.awt.SystemColor;
+
+public class DisplayParticularStudentDetails extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField;
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
+    private static final String DB_USER = "root";  // Change this to your MySQL username
+    private static final String DB_PASSWORD = "SWETHA*1s";  // Change this to your MySQL password
+    private JButton btnNewButton_1;
+    private JButton btnNewButton_2;
+    private JButton btnNewButton_3;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					DisplayParticularStudentDetails frame = new DisplayParticularStudentDetails();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public DisplayParticularStudentDetails() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 590, 413);
+		setTitle("View Particular Student");
+		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.scrollbar);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Enter Roll Number");
+		lblNewLabel.setBounds(92, 87, 129, 32);
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		contentPane.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setBounds(307, 89, 217, 32);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JButton btnNewButton = new JButton("Display Personal Details");
+		btnNewButton.setBounds(53, 190, 205, 32);
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		contentPane.add(btnNewButton);
+		
+		btnNewButton_1 = new JButton("Display Educational Details");
+		btnNewButton_1.setBounds(307, 190, 217, 32);
+		btnNewButton_1.setHorizontalAlignment(SwingConstants.LEFT);
+		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		contentPane.add(btnNewButton_1);
+		
+		btnNewButton_2 = new JButton("CLEAR");
+		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnNewButton_2.setBounds(92, 287, 129, 32);
+		contentPane.add(btnNewButton_2);
+		btnNewButton_2.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				textField.setText("");
+				
+			}
+			
+		});
+		
+		btnNewButton_3 = new JButton("BACK");
+		btnNewButton_3.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 15));
+		btnNewButton_3.setBounds(365, 287, 113, 32);
+		contentPane.add(btnNewButton_3);
+		btnNewButton_3.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				HomePage f=new HomePage();
+				f.setVisible(true);
+				
+			}
+			
+			
+		});
+		btnNewButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showStudentPersonalDetails();
+				
+			}
+
+			private void showStudentPersonalDetails() {
+				
+				String rollno=textField.getText().trim();
+				if(rollno.isEmpty()) {
+					
+					JOptionPane.showMessageDialog(null, "Please Enter Roll Number ");
+					return ;
+				}
+				
+				try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+		            String query = "SELECT * FROM studentpersonaldetails where rollno='"+rollno+"'";
+		            Statement stmt = connection.createStatement();
+		            ResultSet rs = stmt.executeQuery(query);
+
+		            // Create a new frame for displaying student details
+		            JFrame detailsFrame = new JFrame("Student Details");
+		            detailsFrame.setSize(600, 300);
+		            //detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		            detailsFrame.setLocationRelativeTo(null);  // Center the window
+
+		            // Define column names for the table
+		            String[] columns = {"Name", "Age", "Department", "Rollno ", "Address","DOB","Gender","Father Name","Mother Name","Father Occupation","Mother Occupation","Blood Group","City Of Residence","Contact","Aadhar","Religion","Caste","Community","Nationality"};
+		            DefaultTableModel model = new DefaultTableModel(columns,0) {
+		                @Override
+		                public boolean isCellEditable(int row, int column) {
+		                    return false; // Make all cells non-editable
+		                }
+		            };
+
+		            
+		            // Create a DefaultTableModel to hold the data
+		            //DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+		            // Loop through the ResultSet and add each row of student data to the model
+		            while (rs.next()) {
+		                Object[] row = {
+		                    rs.getString("name"),
+		                    rs.getInt("age"),
+		                    rs.getString("department"),
+		                    rs.getString("rollno"),
+		                    rs.getString("address"),
+		                    rs.getString("dob"),
+		                    rs.getString("gender"),
+		                    rs.getString("Father_Name"),
+		                    rs.getString("Mother_Name"),
+		                    rs.getString("Father_Occupation"),
+		                    rs.getString("Mother_Occupation"),
+		                    rs.getString("Blood_group"),
+		                    rs.getString("City_Of_Residence"),
+		                    rs.getString("Contact"),
+		                    rs.getString("Aadhar"),
+		                    rs.getString("Religion"),
+		                    rs.getString("Caste"),
+		                    rs.getString("Community"),
+		                    rs.getString("Nationality"),
+		                  
+		                };
+		                model.addRow(row);
+		            }
+
+		            // Create a JTable to display the student data and wrap it in a JScrollPane
+		            JTable table = new JTable(model);
+		            JScrollPane scrollPane = new JScrollPane(table);
+
+		            // Add the JScrollPane containing the table to the details frame
+		            detailsFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+		            // Make the details frame visible
+		            detailsFrame.setVisible(true);
+
+		        } catch (SQLException e) {
+		            // Show an error message if there's an issue connecting to the database
+		            JOptionPane.showMessageDialog(null, "Error connecting to database: " + e.getMessage());
+		        }
+		    
+			
+		
+				
+			}
+			
+		});
+		btnNewButton_1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // When the button is clicked, show the student details in a new window
+                showPersonalDetails();
+            }
+
+			private void showPersonalDetails() {
+				// private static void showStudentDetails() {
+				        // Connect to the database and fetch student details
+				String rollno=textField.getText().trim();
+				if(rollno.isEmpty())
+				{
+					JOptionPane.showMessageDialog(null,"Please Enter Roll Number ");
+					return;
+				}
+				        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+				            String query = "SELECT * FROM studenteducationaldetails where rollno='"+rollno+"'";
+				            Statement stmt = connection.createStatement();
+				            ResultSet rs = stmt.executeQuery(query);
+
+				            // Create a new frame for displaying student details
+				            JFrame detailsFrame = new JFrame("Student Details");
+				            detailsFrame.setSize(600, 300);
+				            //detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				            detailsFrame.setLocationRelativeTo(null);  // Center the window
+
+				            // Define column names for the table
+				            String[] columns= {"Roll Number","CutOff","Institution Studiend in SSLC","SSLC Marks in Percentage","Institution Studied in HSC","HSC Marks in Percentage","Year Of Passing in SSLC","Year Of Passing in HSC","Accomodation Type","Expected Graduation"};
+				            DefaultTableModel model = new DefaultTableModel(columns, 0) {
+				                @Override
+				                public boolean isCellEditable(int row, int column) {
+				                    return false; // Make all cells non-editable
+				                }
+				            };
+
+				            
+				            // Create a DefaultTableModel to hold the data
+				            
+
+				            // Loop through the ResultSet and add each row of student data to the model
+				            while (rs.next()) {
+				                Object[] row = {
+				                		rs.getString("rollno"),
+				                		rs.getInt("CutOff"),
+				                    rs.getString("Institution_Studied_SSLC"),
+				                    rs.getInt("Marks_In_Percentage_SSLC"),
+				                    rs.getString("Institution_Studied_HSC"),                   
+				                    rs.getInt("Marks_In_Percentage_HSC"),
+				                    rs.getString("Year_Of_Passing_SSLC"),
+				                    //rs.getString("dob"),
+				                    rs.getString("Year_Of_Passing_HSC"),
+				                    rs.getString("Accomodation_Type"),
+				                    rs.getString("Expected_Graduation_In_Years"),
+				                    
+				                   
+				                };
+				                model.addRow(row);
+				            }
+
+				            // Create a JTable to display the student data and wrap it in a JScrollPane
+				            JTable table = new JTable(model);
+				            JScrollPane scrollPane = new JScrollPane(table);
+
+				            // Add the JScrollPane containing the table to the details frame
+				            detailsFrame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+				            // Make the details frame visible
+				            detailsFrame.setVisible(true);
+
+				        } catch (SQLException e) {
+				            // Show an error message if there's an issue connecting to the database
+				            JOptionPane.showMessageDialog(null, "Error connecting to database: " + e.getMessage());
+				        }
+				 
+				// TODO Auto-generated method stub
+				
+			}
+        });
+		
+		
+		
+		
+		
+	}
+}
