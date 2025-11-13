@@ -30,7 +30,7 @@ public class HomePage extends JFrame {
 	
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
     private static final String DB_USER = "root";  // Change this to your MySQL username
-    private static final String DB_PASSWORD = "SWETHA*1s";  // Change this to your MySQL password
+    private static final String DB_PASSWORD = " ";  // Change this to your MySQL password
 
 
 	/**
@@ -286,7 +286,7 @@ public class frame extends JFrame implements ActionListener {
 	private Map<String, Integer> departmentCounters= new HashMap<>();
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
     private static final String DB_USER = "root";  // Change this to your MySQL username
-    private static final String DB_PASSWORD = "SWETHA*1s";  // Change this to your MySQL password
+    private static final String DB_PASSWORD = " ";  // Change this to your MySQL password
 
 	public JPanel contentPane;
 	public  JLabel lblNewLabel_1;
@@ -663,7 +663,7 @@ public class frame extends JFrame implements ActionListener {
 			    
 			    String u1 ="jdbc:mysql://localhost:3306/admissionsystem";
 				String us1 ="root";
-				String p1 ="SWETHA*1s";
+				String p1 =" ";
 				
 				Connection conn=null;
 				Statement stmt = null;
@@ -1115,7 +1115,7 @@ btnNewButton.addActionListener(new ActionListener() {
 			    
 			    String u1 ="jdbc:mysql://localhost:3306/admissionsystem";
 				String us1 ="root";
-				String p1 ="SWETHA*1s";
+				String p1 =" ";
 				
 				Connection conn=null;
 				Statement stmt = null;
@@ -1206,7 +1206,7 @@ btnNewButton.addActionListener(new ActionListener() {
 					{	
 						String u ="jdbc:mysql://localhost:3306/admissionsystem";
 						String us ="root";
-						String p ="SWETHA*1s";
+						String p =" ";
 						
 							conn = DriverManager.getConnection(u,us,p);
 							stmt=conn.createStatement();	
@@ -1375,7 +1375,7 @@ public class UpdateStudent extends JFrame {
 	            try {
 	            	final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem"; // Update with your DB URL
 	                final String USER = "root"; // Replace with your MySQL username
-	                final String PASSWORD = "SWETHA*1s"; // Replace with your MySQL password
+	                final String PASSWORD = " "; // Replace with your MySQL password
 	               
 	                Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 	                //String rollno=textField.getText();
@@ -1616,7 +1616,7 @@ public class UpdateStudent extends JFrame {
 			{	try {
 				//final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem"; // Update with your DB URL
 	            //final String USER = "root"; // Replace with your MySQL username
-	            //final String PASSWORD = "SWETHA*1s"; // Replace with your MySQL password
+	            //final String PASSWORD = " "; // Replace with your MySQL password
 				 String rollno=textField.getText();
 	            
 	            int response = JOptionPane.showConfirmDialog(null,
@@ -1657,7 +1657,7 @@ private static boolean updateStudent(String rollNo) {
     //String sql = "DELETE FROM studentpersonaldetails WHERE rollno = ?"; // Ensure this is correct
 	final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem"; // Update with your DB URL
     final String USER = "root"; // Replace with your MySQL username
-    final String PASSWORD = "SWETHA*1s"; // Replace with your MySQL password
+    final String PASSWORD = " "; // Replace with your MySQL password
     String rollno=textField.getText();
     String name=textField_1.getText();
    // String age=textField_2.getText();
@@ -1794,7 +1794,7 @@ public class DeleteStudents extends JFrame {
 	private JTextField textField;
 	 private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
 	    private static final String USER = "root";
-	    private static final String PASSWORD = "SWETHA*1s";
+	    private static final String PASSWORD = " ";
 
 	
 	public static void main(String[] args) {
@@ -2080,7 +2080,7 @@ public class DisplayStudent extends JFrame {
 	private JPanel contentPane;
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
     private static final String DB_USER = "root";  // Change this to your MySQL username
-    private static final String DB_PASSWORD = "SWETHA*1s";  // Change this to your MySQL password
+    private static final String DB_PASSWORD = " ";  // Change this to your MySQL password
 
 
 	/**
@@ -2335,7 +2335,7 @@ public class DisplayParticularStudentDetails extends JFrame {
 	private JTextField textField;
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/admissionsystem";
     private static final String DB_USER = "root";  // Change this to your MySQL username
-    private static final String DB_PASSWORD = "SWETHA*1s";  // Change this to your MySQL password
+    private static final String DB_PASSWORD = " ";  // Change this to your MySQL password
     private JButton btnNewButton_1;
     private JButton btnNewButton_2;
     private JButton btnNewButton_3;
@@ -2596,3 +2596,4 @@ public class DisplayParticularStudentDetails extends JFrame {
 		
 	}
 }
+
