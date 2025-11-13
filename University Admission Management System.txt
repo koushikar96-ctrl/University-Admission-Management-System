@@ -1,3 +1,5 @@
+# this file contains all java classes for the project
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -2596,4 +2598,5 @@ public class DisplayParticularStudentDetails extends JFrame {
 		
 	}
 }
+
 
